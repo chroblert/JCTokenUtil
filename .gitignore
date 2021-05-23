@@ -1,0 +1,16 @@
+﻿################################################################################
+# 此 .gitignore 文件已由 Microsoft(R) Visual Studio 自动创建。
+################################################################################
+
+/version1/.vs/
+/version1/Release/
+/version1/Debug/
+/version1/x64/
+/version2/.vs/
+/version2/Release/
+/version2/Debug/
+/version2/x64/
+/version3/.vs/
+/version3/Release/
+/version3/Debug/
+/version3/x64/
