@@ -7,7 +7,7 @@ void Helper::print_usage() {
 ===============TokenUtil================
 |          author:JC0o0l               |
 |          wechat:JC_SecNotes          |
-|          version:1.0[2105]           |
+|          version:1.1[2106]           |
 ========================================)";
 	printf("%s\n\n", rawBanner);
 
