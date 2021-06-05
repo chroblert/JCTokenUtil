@@ -421,6 +421,7 @@ BOOL TokenInforUtil::GetTokens(PTokenList pTokenList) {
 		status = NtQuerySystemInformation(SystemHandleInformation, pshi, sizeof(SYSTEM_HANDLE_INFORMATION_EX), NULL);
 		//printf("pshi->NumberOfHandles: %lu\n", pshi->NumberOfHandles);
 		DWORD tmpPid = 0;
+		//printf("JCT0605:err: %d\n", GetLastError());
 		for (ULONG r = 0; r < pshi->NumberOfHandles; r++)
 		{
 			// 用来获取每个进程（除了0）的主令牌
@@ -437,6 +438,7 @@ BOOL TokenInforUtil::GetTokens(PTokenList pTokenList) {
 				if (hProc == NULL) {
 					hProc = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, (DWORD)pshi->Information[r].ProcessId);
 					if (hProc == NULL) {
+						//printf("JCT0605:err: %d\n",GetLastError());
 						// 下个句柄
 						continue;
 					}
@@ -450,6 +452,9 @@ BOOL TokenInforUtil::GetTokens(PTokenList pTokenList) {
 				}
 				else {
 					if (!ProcessInforUtil::GetProcessNameFromPid((DWORD)pshi->Information[r].ProcessId, tProcName)) {
+						//printf("JCT: processid:%d\n", pshi->Information[r].ProcessId);
+						//printf("JCT:procname: 获取进程的名称失败,%S\n",tProcName);
+						//system("pause");
 						goto loopCon;
 					}
 				}
@@ -463,7 +468,7 @@ BOOL TokenInforUtil::GetTokens(PTokenList pTokenList) {
 				else
 				{
 					//printf("[-] OpenProcessToken() Return Code: %i\n", getToken);
-					//printf("[-] OpenProcessToken() Error: %i\n", GetLastError());
+					//printf("[-] OpenProcessToken() Error: %d\n", GetLastError());
 					// 报错Access Denied: 5的原因可能是当前正在模拟其他用户
 					// 查看当前模拟的是哪个用户
 					//if (OpenThreadToken(GetCurrentThread(), TOKEN_ALL_ACCESS,TRUE, &tmpHToken) == TRUE) {

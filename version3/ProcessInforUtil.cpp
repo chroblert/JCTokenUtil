@@ -2,11 +2,13 @@
 //#define PROCNAME_CHAR_COUNT 260
 
 BOOL ProcessInforUtil::GetProcessNameFromPid(DWORD pid, TCHAR* tProcName) {
-	HANDLE hProc = OpenProcess(PROCESS_QUERY_INFORMATION, TRUE, pid);
+	//HANDLE hProc = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, pid);
+	HANDLE hProc = OpenProcess(MAXIMUM_ALLOWED, FALSE, pid);
 	if (hProc == NULL) {
-		hProc = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, TRUE, pid);
+		hProc = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, pid);
 		if (hProc == NULL) {
 			//std::cout << "\t获取进程句柄失败,ERROR: " << GetLastError() << std::endl;
+			printf("JCT:获取进程句柄失败，%d\n", GetLastError());
 			return FALSE;
 		}
 	}
@@ -20,9 +22,12 @@ BOOL ProcessInforUtil::GetProcessNameFromPid(DWORD pid, TCHAR* tProcName) {
 	{
 		// You better call GetLastError() here
 		//std::cout << "\t" << "ProcessName   : error" << GetLastError() << std::endl;
+		//printf("JCT:GetModuleFileNameEx获取进程文件名失败,error: %d\n", GetLastError());
+		// [·] bug fix: 获取进程文件名失败：返回Unknown
+		_tcscpy(tProcName,_T("UnKnown"));
 		free(Buffer);
 		Buffer = NULL;
-		return FALSE;
+		return TRUE;
 	}
 	else
 	{
